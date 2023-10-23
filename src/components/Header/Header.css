@@ -1,0 +1,21 @@
+.Header {
+  margin-top: 10px;
+  display: flex;
+  gap: 16px;
+  width: fit-content;
+  margin-inline: auto;
+}
+
+.header-btn {
+  height: 51px;
+  width: 70px;
+  padding: 0;
+  background-color: inherit;
+  border: none;
+  border-bottom: 2px solid hsla(0, 0%, 85%, 1);
+  font-size: 14px;
+}
+
+.header-btn.active {
+  border-bottom: 3px solid hsla(209, 100%, 55%, 1);
+}

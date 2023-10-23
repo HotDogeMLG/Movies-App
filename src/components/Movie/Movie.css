@@ -1,0 +1,96 @@
+.Movie {
+  width: 450px;
+  height: 280px;
+  display: flex;
+  box-shadow: 0 4px 12px 0 hsl(0, 0%, 0%, 0.2);
+  border-radius: 10px;
+
+  @media screen and (max-width: 480px) {
+    width: 330px;
+    height: 265px;
+    flex-shrink: 0;
+  }
+}
+
+.poster {
+  display: block;
+  margin-right: 10px;
+
+  @media screen and (max-width: 480px) {
+    height: 90px;
+    margin: 7px 0 0 10px;
+  }
+}
+
+.Movie__info {
+  position: relative;
+  min-width: 220px;
+  padding: 10px;
+  font-size: 12px;
+
+  @media screen and (max-width: 480px) {
+    width: 76%;
+  }
+}
+
+.name {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.release-date {
+  color: hsla(0, 1%, 50%, 1);
+}
+
+.genres-container {
+  color: hsla(0, 1%, 50%, 1);
+  margin-top: 7px;
+  display: flex;
+  gap: 8px;
+}
+
+.genre {
+  padding: 2px 4px;
+  background-color: hsla(0, 0%, 98%, 1);
+  border: 1px solid hsla(0, 0%, 85%, 1);
+  border-radius: 2px;
+}
+
+.description {
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 22px;
+  margin-top: 7px;
+  margin-bottom: 0;
+
+  @media screen and (max-width: 480px) {
+    position: absolute;
+    left: -60px;
+    top: 100px;
+  }
+}
+
+.stars {
+  margin-left: -5px;
+
+  @media screen and (max-width: 480px) {
+    position: absolute;
+    top: 215px;
+  }
+}
+
+.rating {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  border: 2px solid hsla(54, 100%, 46%, 1);
+  border-radius: 50%;
+  top: 12px;
+  right: 9px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 1px;
+}

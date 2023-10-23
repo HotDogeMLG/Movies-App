@@ -1,0 +1,8 @@
+body {
+  padding-inline: 30px;
+  font-family: 'Inter', sans-serif;
+
+  @media screen and (max-width: 480px) {
+    padding-inline: 10px;
+  }
+}

@@ -1,0 +1,10 @@
+.MoviesContainer {
+  margin-top: 30px;
+  list-style-type: none;
+  display: flex;
+  justify-content: center;
+  gap: 35px;
+  flex-wrap: wrap;
+  margin-inline: auto;
+  padding: 0;
+}

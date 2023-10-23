@@ -1,0 +1,13 @@
+.pagination {
+  width: fit-content;
+  margin-top: 37px;
+  margin-inline: auto;
+}
+
+.page-link {
+  border: none;
+  border-radius: 5px;
+  width: 30px;
+  text-align: center;
+  margin-inline: 5px;
+}
