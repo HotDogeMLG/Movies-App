@@ -1,48 +1,45 @@
-export default class apiService {
-  _apiBase = 'https://swapi.dev/api';
+// class apiService {
+//   _apiBase = 'https://api.themoviedb.org/3/search/movie';
 
-  async getResource(url) {
-    const res = await fetch(`${this._apiBase}${url}`);
-    if (!res.ok) {
-      throw new Error(
-        `Could not fetch ${this._apiBase}${url}, recieved ${res.status}`
-      );
-    }
-    const body = await res.json();
-    return body;
-  }
+//   async getMovies(input) {
+//     const options = {
+//       method: 'GET',
+//       headers: {
+//         accept: 'application/json',
+//         Authorization:
+//           'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZmI3NTc1MzkxN2U2YjRiZWViYTVmMmI3YjQyNTVkMiIsInN1YiI6IjY1Mzc3NDU1N2ZjYWIzMDBhZDdlMjdiNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.yNGHORH0JNqYrbpNukrgiV5jLuAu1OktkhOdCOI0cPM',
+//       },
+//     };
 
-  async getAllPeople() {
-    const res = await this.getResource(`/people/`);
-    return res.results;
-  }
-  getPerson(id) {
-    return this.getResource(`/people/${id}/`);
-  }
+//     let url = new URL(this._apiBase);
+//     url.searchParams.set('q', input);
+//     const res = await fetch(url);
+//     if (!res.ok) {
+//       throw new Error(
+//         `Could not fetch ${this._apiBase}${url}, recieved ${res.status}`
+//       );
+//     }
+//     const body = await res.json();
+//     return body;
+//   }
+// }
 
-  async getAllPlanets() {
-    const res = await this.getResource(`/planets/`);
-    return res.results;
-  }
-  getPlanet(id) {
-    return this.getResource(`/planets/${id}/`);
-  }
+// const api = new apiService();
+// api.getMovies('The Way Back');
 
-  async getAllStarships() {
-    const res = await this.getResource(`/starships/`);
-    return res.results;
-  }
-  getStarship(id) {
-    return this.getResource(`/starships/${id}/`);
-  }
-}
+const options = {
+  method: 'GET',
+  headers: {
+    accept: 'application/json',
+    Authorization:
+      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZmI3NTc1MzkxN2U2YjRiZWViYTVmMmI3YjQyNTVkMiIsInN1YiI6IjY1Mzc3NDU1N2ZjYWIzMDBhZDdlMjdiNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.yNGHORH0JNqYrbpNukrgiV5jLuAu1OktkhOdCOI0cPM',
+  },
+};
 
-const api = new apiService();
-api.getAllPeople().then((body) => {
-  body.forEach((person) => {
-    console.log(person.name);
-  });
-});
-api.getPerson(3).then((body) => {
-  console.log(body);
-});
+fetch(
+  'https://api.themoviedb.org/3/trending/all/day?api_key=1fb75753917e6b4beeba5f2b7b4255d2',
+  options
+)
+  .then((response) => response.json())
+  .then((response) => console.log(response))
+  .catch((err) => console.error(err));
