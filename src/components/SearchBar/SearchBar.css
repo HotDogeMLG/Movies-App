@@ -18,10 +18,12 @@
   border: 2px solid hsla(0, 0%, 85%, 1);
   border-radius: 5px;
   text-align: center;
+  transition: border 0.4s;
 }
 
 .search-input:focus {
   outline: none;
+  border: 2px solid hsla(0, 0%, 60%, 1);
 }
 
 .search-input::placeholder {

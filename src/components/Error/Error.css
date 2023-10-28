@@ -1,0 +1,10 @@
+.error-img {
+  width: 180px;
+  height: 180px;
+}
+
+.Error {
+  margin-left: 5px;
+  display: flex;
+  align-items: center;
+}

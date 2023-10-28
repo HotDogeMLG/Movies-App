@@ -24,7 +24,7 @@
 
 .Movie__info {
   position: relative;
-  min-width: 220px;
+  width: 250px;
   padding: 10px;
   font-size: 12px;
 
@@ -36,6 +36,7 @@
 .name {
   font-size: 20px;
   font-weight: 500;
+  width: 80%;
 }
 
 .release-date {
@@ -56,12 +57,18 @@
   border-radius: 2px;
 }
 
+.description-wrapper {
+  height: 85%;
+  overflow: hidden;
+}
+
 .description {
   font-family: inherit;
   font-weight: 500;
   line-height: 22px;
   margin-top: 7px;
   margin-bottom: 0;
+  overflow: hidden;
 
   @media screen and (max-width: 480px) {
     position: absolute;

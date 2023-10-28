@@ -14,8 +14,9 @@
   border: none;
   border-bottom: 2px solid hsla(0, 0%, 85%, 1);
   font-size: 14px;
+  transition: border 0.4s;
 }
 
 .header-btn.active {
-  border-bottom: 3px solid hsla(209, 100%, 55%, 1);
+  border-bottom: 2px solid hsla(209, 100%, 55%, 1);
 }
