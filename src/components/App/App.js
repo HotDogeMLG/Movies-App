@@ -1,4 +1,5 @@
 import React from 'react'
+import { debounce } from 'lodash'
 
 import Header from '../Header/Header'
 import SearchBar from '../SearchBar/SearchBar'
@@ -11,34 +12,146 @@ export default class App extends React.Component {
   state = {
     movies: [],
     loading: true,
+    error: false,
+    page: 1,
+    searchVal: '',
+    tab: 'search',
   }
+
+  api = new apiService()
 
   async getTopMoives() {
     this.setState({
       loading: true,
     })
-    const api = new apiService()
-    await api.getToken()
-    await api.createSession()
-    const topMovies = await api.getTopMovies()
+    try {
+      const topMovies = await this.api.getTopMovies()
+      this.setState({
+        movies: topMovies.results,
+        loading: false,
+      })
+    } catch (e) {
+      console.log('Произошел пиздец')
+      this.throwError()
+    }
+  }
+
+  changePage(page) {
     this.setState({
-      movies: topMovies.results,
-      loading: false,
+      page,
     })
   }
 
-  componentDidMount() {
-    this.getTopMoives()
+  async changeTab(tab) {
+    await this.setState({
+      tab,
+      loading: true,
+    })
+    if (this.state.tab === 'rated') {
+      try {
+        const ratedMovies = await this.api.getRatedMovies(this.sessionID)
+        this.setState({
+          movies: ratedMovies.results,
+          ratedMovies: ratedMovies.results,
+        })
+        this.setState({
+          loading: false,
+        })
+      } catch (e) {
+        this.throwError()
+      }
+    } else {
+      this.searchRequest(this.state.searchVal)
+    }
+  }
+
+  async searchMovies(val) {
+    if (this.state.searchVal !== val) {
+      this.setState({ searchVal: val })
+      this.debouncedSearch(val)
+    }
+  }
+
+  searchRequest = async (val) => {
+    const ratedMovies = await this.api.getRatedMovies(this.sessionID)
+    this.setState({ ratedMovies: ratedMovies.results })
+    if (val === '') {
+      this.getTopMoives()
+    } else {
+      this.setState({
+        loading: true,
+      })
+
+      try {
+        let movies = await this.api.searchMovies(val)
+        this.setState({
+          movies: movies.results,
+          loading: false,
+        })
+      } catch (e) {
+        this.throwError()
+      }
+    }
+  }
+
+  throwError() {
+    this.setState({
+      loading: false,
+      error: true,
+    })
+  }
+
+  debouncedSearch = debounce(this.searchRequest, 800)
+
+  async componentDidMount() {
+    try {
+      this.token = await this.api.getToken()
+      this.sessionID = await this.api.createSession()
+      console.log('token ', this.token)
+      console.log('id ', this.sessionID)
+      const { searchVal } = this.state
+      this.searchRequest(searchVal)
+    } catch (e) {
+      this.throwError()
+    }
   }
 
   render() {
-    const { movies, loading } = this.state
+    const { movies, loading, error, page, searchVal, tab, ratedMovies } = this.state
+    let shownMovies = []
+    if (movies && !loading) shownMovies = movies.slice((page - 1) * 4, page * 4)
+
+    const searchBar =
+      tab === 'search' ? (
+        <SearchBar
+          value={searchVal}
+          onSearch={(val) => {
+            this.searchMovies(val)
+          }}
+        />
+      ) : null
     return (
       <div className="App">
-        <Header />
-        <SearchBar />
-        <MoviesContainer movies={movies} loading={loading} />
-        <Pagination />
+        <Header
+          tab={tab}
+          onTabChange={(tab) => {
+            this.changeTab(tab)
+          }}
+        />
+        {searchBar}
+        <MoviesContainer
+          movies={shownMovies}
+          sessionID={this.sessionID}
+          ratedMovies={ratedMovies}
+          loading={loading}
+          error={error}
+        />
+        <Pagination
+          page={page}
+          onPageChange={(page) => {
+            this.changePage(page)
+          }}
+        />
       </div>
     )
   }

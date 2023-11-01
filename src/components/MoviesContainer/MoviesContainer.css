@@ -10,7 +10,15 @@
 }
 
 .center {
+  margin-top: 20px;
+  gap: 20px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.error-text {
+  font-size: 20px;
+  font-weight: 500;
 }

@@ -1,0 +1,18 @@
+.fa-star {
+  margin-top: 8px;
+  width: 23px;
+  color: gray;
+  cursor: pointer;
+}
+
+.checked {
+  color: orange;
+}
+
+.hovered {
+  filter: brightness(0.7);
+}
+
+.fa {
+  font-size: 20px;
+}

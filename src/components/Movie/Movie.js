@@ -5,7 +5,7 @@ import parseISO from 'date-fns/parseISO'
 import './Movie.css'
 import Spinner from '../Spinner/Spinner'
 import Error from '../Error/Error'
-import starsRating from '../../img/stars-rating.png'
+import Stars from '../Stars/Stars'
 
 export default class Movie extends React.Component {
   state = {
@@ -15,6 +15,7 @@ export default class Movie extends React.Component {
   }
 
   cutDescription(desc, title) {
+    if (!desc) return 'No description'
     let maxLen = 220
     if (title.length > 20) {
       maxLen = 170
@@ -59,7 +60,7 @@ export default class Movie extends React.Component {
   }
 
   showDate(date) {
-    if (date === null || date === undefined) return 'Release date unknown'
+    if (!date) return 'Release date unknown'
     return format(parseISO(date), 'MMMM d, y')
   }
 
@@ -68,8 +69,15 @@ export default class Movie extends React.Component {
   }
 
   render() {
-    const { movie } = this.props
+    const { movie, ratedMovies, sessionID } = this.props
     const { error, loading, image } = this.state
+
+    const rating = movie.vote_average.toFixed(1)
+    let ratingClasses = 'rating'
+    if (rating < 3) ratingClasses += ' worst'
+    else if (rating < 5) ratingClasses += ' bad'
+    else if (rating < 7) ratingClasses += ' good'
+    else ratingClasses += ' excellent'
 
     const img = <img src={image} alt="Movie Poster" className="poster"></img>
     let poster = loading ? <Spinner /> : img
@@ -79,7 +87,7 @@ export default class Movie extends React.Component {
         {poster}
         <article className="Movie__info">
           <div className="description-wrapper">
-            <div className="rating">{movie.vote_average.toFixed(2)}</div>
+            <div className={ratingClasses}>{rating}</div>
             <h4 className="name">{movie.title}</h4>
             <span className="release-date">{this.showDate(movie.release_date)}</span>
             <div className="genres-container">
@@ -88,7 +96,7 @@ export default class Movie extends React.Component {
             </div>
             <p className="description">{this.cutDescription(movie.overview, movie.title)}</p>
           </div>
-          <img src={starsRating} className="stars"></img>
+          <Stars movie={movie} ratedMovies={ratedMovies} sessionID={sessionID} />
         </article>
       </li>
     )

@@ -4,42 +4,56 @@ import './Pagination.css'
 
 export default class Pagination extends React.Component {
   render() {
+    const { onPageChange, page } = this.props
+    const listItems = []
+
+    for (let i = 1; i <= 5; i++) {
+      let liClasses = 'page-item'
+      if (i === page) liClasses += ' active'
+      let li = (
+        <li className={liClasses} key={i}>
+          <button
+            className="page-link"
+            type="button"
+            onClick={() => {
+              onPageChange(i)
+            }}
+          >
+            {i}
+          </button>
+        </li>
+      )
+      listItems.push(li)
+    }
+
+    let leftClasses, rightClasses
+    leftClasses = rightClasses = 'page-item'
+    if (page === 1) leftClasses += ' disabled'
+    else if (page === 5) rightClasses += ' disabled'
     return (
       <ul className="pagination pagination-sm">
-        <li className="page-item disabled">
-          <a className="page-link" href="#">
+        <li className={leftClasses}>
+          <button
+            className="page-link"
+            type="button"
+            onClick={() => {
+              onPageChange(page - 1)
+            }}
+          >
             &laquo;
-          </a>
+          </button>
         </li>
-        <li className="page-item active">
-          <a className="page-link" href="#">
-            1
-          </a>
-        </li>
-        <li className="page-item">
-          <a className="page-link" href="#">
-            2
-          </a>
-        </li>
-        <li className="page-item">
-          <a className="page-link" href="#">
-            3
-          </a>
-        </li>
-        <li className="page-item">
-          <a className="page-link" href="#">
-            4
-          </a>
-        </li>
-        <li className="page-item">
-          <a className="page-link" href="#">
-            5
-          </a>
-        </li>
-        <li className="page-item">
-          <a className="page-link" href="#">
+        {listItems}
+        <li className={rightClasses}>
+          <button
+            className="page-link"
+            type="button"
+            onClick={() => {
+              onPageChange(page + 1)
+            }}
+          >
             &raquo;
-          </a>
+          </button>
         </li>
       </ul>
     )
