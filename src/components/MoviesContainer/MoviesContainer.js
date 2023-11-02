@@ -25,19 +25,7 @@ export default class MoviesContainer extends React.Component {
         </div>
       )
     const allMovies = movies.map((el) => {
-      return (
-        <Movie
-          movie={el}
-          ratedMovies={ratedMovies}
-          sessionID={sessionID}
-          key={el.id}
-          title={el.title}
-          description={el.overview}
-          rating={el.vote_average}
-          releaseDate={el.release_date}
-          poster={el.poster}
-        />
-      )
+      return <Movie movie={el} ratedMovies={ratedMovies} sessionID={sessionID} key={el.id} />
     })
     return <ul className="MoviesContainer">{allMovies}</ul>
   }

@@ -6,6 +6,7 @@ import './Movie.css'
 import Spinner from '../Spinner/Spinner'
 import Error from '../Error/Error'
 import Stars from '../Stars/Stars'
+import { GenresConsumer } from '../GenresContext/GenresContext'
 
 export default class Movie extends React.Component {
   state = {
@@ -64,6 +65,23 @@ export default class Movie extends React.Component {
     return format(parseISO(date), 'MMMM d, y')
   }
 
+  getGenres(genres, allGenres) {
+    const genresList = []
+    for (let i = 0; i < genres.length; i++) {
+      for (let genre of allGenres) {
+        if (genre.id === genres[i]) {
+          genresList.push(
+            <span key={genre.name} className="genre">
+              {genre.name}
+            </span>
+          )
+          break
+        }
+      }
+    }
+    return genresList.slice(0, 3)
+  }
+
   componentDidMount() {
     this.getPoster(this.props.movie.poster_path)
   }
@@ -81,24 +99,33 @@ export default class Movie extends React.Component {
 
     const img = <img src={image} alt="Movie Poster" className="poster"></img>
     let poster = loading ? <Spinner /> : img
-    if (error) poster = <Error />
+    if (error)
+      poster = (
+        <div className="image-error">
+          <span className="image-error-description">Image was not found</span>
+          <Error />
+        </div>
+      )
     return (
-      <li className="Movie">
-        {poster}
-        <article className="Movie__info">
-          <div className="description-wrapper">
-            <div className={ratingClasses}>{rating}</div>
-            <h4 className="name">{movie.title}</h4>
-            <span className="release-date">{this.showDate(movie.release_date)}</span>
-            <div className="genres-container">
-              <span className="genre">Action</span>
-              <span className="genre">Drama</span>
-            </div>
-            <p className="description">{this.cutDescription(movie.overview, movie.title)}</p>
-          </div>
-          <Stars movie={movie} ratedMovies={ratedMovies} sessionID={sessionID} />
-        </article>
-      </li>
+      <GenresConsumer>
+        {(genres) => {
+          return (
+            <li className="Movie">
+              {poster}
+              <article className="Movie__info">
+                <div className="description-wrapper">
+                  <div className={ratingClasses}>{rating}</div>
+                  <h4 className="name">{movie.title}</h4>
+                  <span className="release-date">{this.showDate(movie.release_date)}</span>
+                  <div className="genres-container">{this.getGenres(movie.genre_ids, genres)}</div>
+                  <p className="description">{this.cutDescription(movie.overview, movie.title)}</p>
+                </div>
+                <Stars movie={movie} ratedMovies={ratedMovies} sessionID={sessionID} />
+              </article>
+            </li>
+          )
+        }}
+      </GenresConsumer>
     )
   }
 }

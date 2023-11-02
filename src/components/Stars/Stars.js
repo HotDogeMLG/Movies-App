@@ -5,7 +5,7 @@ import './Stars.css'
 
 export default class Stars extends React.Component {
   state = {
-    loading: true,
+    error: false,
     hovered: -1,
     rating: 0,
   }
@@ -30,7 +30,11 @@ export default class Stars extends React.Component {
     this.setState({
       rating,
     })
-    await this.api.addRating(sessionID, movie.id, rating)
+    try {
+      await this.api.addRating(sessionID, movie.id, rating)
+    } catch (e) {
+      this.setState({ error: true })
+    }
   }
 
   onHover = (target) => {
@@ -47,6 +51,8 @@ export default class Stars extends React.Component {
   }
 
   render() {
+    if (this.state.error) return <div className="stars-error">Something went wrong</div>
+
     const stars = []
     const { rating, hovered } = this.state
     for (let i = 0; i < 10; i++) {

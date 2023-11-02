@@ -16,3 +16,11 @@
 .fa {
   font-size: 20px;
 }
+
+.stars-error {
+  font-weight: 600;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 8px;
+  color: rgb(100, 0, 0);
+}

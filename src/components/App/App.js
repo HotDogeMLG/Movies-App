@@ -6,6 +6,7 @@ import SearchBar from '../SearchBar/SearchBar'
 import MoviesContainer from '../MoviesContainer/MoviesContainer'
 import Pagination from '../Pagination/Pagination'
 import apiService from '../../services/apiService'
+import { GenresProvider } from '../GenresContext/GenresContext'
 import './App.css'
 
 export default class App extends React.Component {
@@ -53,6 +54,7 @@ export default class App extends React.Component {
         this.setState({
           movies: ratedMovies.results,
           ratedMovies: ratedMovies.results,
+          page: 1,
         })
         this.setState({
           loading: false,
@@ -61,6 +63,7 @@ export default class App extends React.Component {
         this.throwError()
       }
     } else {
+      this.setState({ page: 1 })
       this.searchRequest(this.state.searchVal)
     }
   }
@@ -73,12 +76,17 @@ export default class App extends React.Component {
   }
 
   searchRequest = async (val) => {
-    const ratedMovies = await this.api.getRatedMovies(this.sessionID)
-    this.setState({ ratedMovies: ratedMovies.results })
+    try {
+      const ratedMovies = await this.api.getRatedMovies(this.sessionID)
+      this.setState({ ratedMovies: ratedMovies.results })
+    } catch (e) {
+      this.throwError()
+    }
     if (val === '') {
       this.getTopMoives()
     } else {
       this.setState({
+        page: 1,
         loading: true,
       })
 
@@ -107,13 +115,17 @@ export default class App extends React.Component {
     try {
       this.token = await this.api.getToken()
       this.sessionID = await this.api.createSession()
-      console.log('token ', this.token)
-      console.log('id ', this.sessionID)
+      let genres = await this.api.getGenres()
+      this.genres = genres.genres
       const { searchVal } = this.state
       this.searchRequest(searchVal)
     } catch (e) {
       this.throwError()
     }
+  }
+
+  componentDidCatch() {
+    this.setState({ loading: false, error: true })
   }
 
   render() {
@@ -131,28 +143,30 @@ export default class App extends React.Component {
         />
       ) : null
     return (
-      <div className="App">
-        <Header
-          tab={tab}
-          onTabChange={(tab) => {
-            this.changeTab(tab)
-          }}
-        />
-        {searchBar}
-        <MoviesContainer
-          movies={shownMovies}
-          sessionID={this.sessionID}
-          ratedMovies={ratedMovies}
-          loading={loading}
-          error={error}
-        />
-        <Pagination
-          page={page}
-          onPageChange={(page) => {
-            this.changePage(page)
-          }}
-        />
-      </div>
+      <GenresProvider value={this.genres}>
+        <div className="App">
+          <Header
+            tab={tab}
+            onTabChange={(tab) => {
+              this.changeTab(tab)
+            }}
+          />
+          {searchBar}
+          <MoviesContainer
+            movies={shownMovies}
+            sessionID={this.sessionID}
+            ratedMovies={ratedMovies}
+            loading={loading}
+            error={error}
+          />
+          <Pagination
+            page={page}
+            onPageChange={(page) => {
+              this.changePage(page)
+            }}
+          />
+        </div>
+      </GenresProvider>
     )
   }
 }

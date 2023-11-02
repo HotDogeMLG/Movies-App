@@ -82,7 +82,6 @@ export default class apiService {
       options
     )
     const responseObj = await response.json()
-    console.log(responseObj)
     return responseObj
   }
 
@@ -97,10 +96,24 @@ export default class apiService {
     }
 
     const apiKey = '1fb75753917e6b4beeba5f2b7b4255d2'
-    const response = await fetch(
+    await fetch(
       `https://api.themoviedb.org/3/movie/${movieID}/rating?api_key=${apiKey}&guest_session_id=${sessionID}`,
       options
     )
-    console.log(await response.json())
+  }
+
+  async getGenres() {
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization:
+          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZmI3NTc1MzkxN2U2YjRiZWViYTVmMmI3YjQyNTVkMiIsInN1YiI6IjY1Mzc3NDU1N2ZjYWIzMDBhZDdlMjdiNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.yNGHORH0JNqYrbpNukrgiV5jLuAu1OktkhOdCOI0cPM',
+      },
+    }
+
+    const response = await fetch('https://api.themoviedb.org/3/genre/movie/list?language=en', options)
+    const responseObj = await response.json()
+    return responseObj
   }
 }
