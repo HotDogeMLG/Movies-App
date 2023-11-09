@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import apiService from '../../services/apiService'
 import './Stars.css'
@@ -8,6 +9,12 @@ export default class Stars extends React.Component {
     error: false,
     hovered: -1,
     rating: 0,
+  }
+
+  static propTypes = {
+    movie: PropTypes.object,
+    ratedMovies: PropTypes.array,
+    sessionID: PropTypes.string,
   }
 
   api = new apiService()

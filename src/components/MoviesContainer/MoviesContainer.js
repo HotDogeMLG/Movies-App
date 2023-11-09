@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import './MoviesContainer.css'
 
@@ -7,6 +8,14 @@ import Spinner from '../Spinner/Spinner'
 import Error from '../Error/Error'
 
 export default class MoviesContainer extends React.Component {
+  static propTypes = {
+    movies: PropTypes.array,
+    sessionID: PropTypes.string,
+    ratedMovies: PropTypes.array,
+    loading: PropTypes.bool,
+    error: PropTypes.bool,
+  }
+
   render() {
     const { movies, loading, error, ratedMovies, sessionID } = this.props
     if (loading)
@@ -23,6 +32,10 @@ export default class MoviesContainer extends React.Component {
           </span>
           <Error />
         </div>
+      )
+    else if (movies.length === 0)
+      return (
+        <div className="no-content">No content here, you should probably check other pages or change your request</div>
       )
     const allMovies = movies.map((el) => {
       return <Movie movie={el} ratedMovies={ratedMovies} sessionID={sessionID} key={el.id} />

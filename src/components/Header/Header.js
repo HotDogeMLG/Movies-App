@@ -1,8 +1,14 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import './Header.css'
 
 export default class Header extends React.Component {
+  static propTypes = {
+    tab: PropTypes.string,
+    onTabChange: PropTypes.func,
+  }
+
   searchClick = () => {
     this.setState({
       searchActive: true,

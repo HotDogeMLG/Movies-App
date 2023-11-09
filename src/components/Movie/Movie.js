@@ -1,6 +1,7 @@
 import React from 'react'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
+import PropTypes from 'prop-types'
 
 import './Movie.css'
 import Spinner from '../Spinner/Spinner'
@@ -13,6 +14,12 @@ export default class Movie extends React.Component {
     image: '',
     loading: true,
     error: false,
+  }
+
+  static propTypes = {
+    movie: PropTypes.object,
+    ratedMovies: PropTypes.array,
+    sessionID: PropTypes.string,
   }
 
   cutDescription(desc, title) {

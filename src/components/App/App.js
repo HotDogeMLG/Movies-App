@@ -26,10 +26,11 @@ export default class App extends React.Component {
       loading: true,
     })
     try {
-      const topMovies = await this.api.getTopMovies()
+      const topMovies = await this.api.getTopMovies(Math.ceil(this.state.page / 2))
       this.setState({
         movies: topMovies.results,
         loading: false,
+        totalResults: topMovies.total_results,
       })
     } catch (e) {
       console.log('Произошел пиздец')
@@ -37,10 +38,25 @@ export default class App extends React.Component {
     }
   }
 
-  changePage(page) {
-    this.setState({
-      page,
-    })
+  async changePage(page) {
+    if (this.state.searchVal !== '') {
+      this.setState({
+        loading: true,
+        page,
+      })
+      try {
+        let movies = await this.api.searchMovies(this.state.searchVal, Math.ceil(page / 2))
+        this.setState({
+          movies: movies.results,
+          loading: false,
+        })
+      } catch (e) {
+        this.throwError()
+      }
+    } else {
+      await this.setState({ page })
+      this.getTopMoives()
+    }
   }
 
   async changeTab(tab) {
@@ -52,6 +68,7 @@ export default class App extends React.Component {
       try {
         const ratedMovies = await this.api.getRatedMovies(this.sessionID)
         this.setState({
+          totalResults: ratedMovies.total_results,
           movies: ratedMovies.results,
           ratedMovies: ratedMovies.results,
           page: 1,
@@ -85,14 +102,15 @@ export default class App extends React.Component {
     if (val === '') {
       this.getTopMoives()
     } else {
-      this.setState({
+      await this.setState({
         page: 1,
         loading: true,
       })
 
       try {
-        let movies = await this.api.searchMovies(val)
+        let movies = await this.api.searchMovies(val, Math.ceil(1))
         this.setState({
+          totalResults: movies.total_results,
           movies: movies.results,
           loading: false,
         })
@@ -129,9 +147,10 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { movies, loading, error, page, searchVal, tab, ratedMovies } = this.state
+    const { movies, loading, error, page, searchVal, tab, ratedMovies, totalResults } = this.state
     let shownMovies = []
-    if (movies && !loading) shownMovies = movies.slice((page - 1) * 4, page * 4)
+
+    if (movies && !loading) page % 2 === 1 ? (shownMovies = movies.slice(0, 10)) : (shownMovies = movies.slice(10, 20))
 
     const searchBar =
       tab === 'search' ? (
@@ -161,6 +180,7 @@ export default class App extends React.Component {
           />
           <Pagination
             page={page}
+            totalResults={totalResults}
             onPageChange={(page) => {
               this.changePage(page)
             }}

@@ -34,7 +34,7 @@ export default class apiService {
     return responseObj.guest_session_id
   }
 
-  async getTopMovies() {
+  async getTopMovies(page) {
     const options = {
       method: 'GET',
       headers: {
@@ -43,14 +43,14 @@ export default class apiService {
     }
     const apiKey = '1fb75753917e6b4beeba5f2b7b4255d2'
     const response = await fetch(
-      `https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1&api_key=${apiKey}`,
+      `https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=${page}&api_key=${apiKey}`,
       options
     )
     if (!response.ok) throw new Error('Something went wrong')
     else return await response.json()
   }
 
-  async searchMovies(searchVal) {
+  async searchMovies(searchVal, page) {
     const options = {
       method: 'GET',
       headers: {
@@ -59,8 +59,7 @@ export default class apiService {
           'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZmI3NTc1MzkxN2U2YjRiZWViYTVmMmI3YjQyNTVkMiIsInN1YiI6IjY1Mzc3NDU1N2ZjYWIzMDBhZDdlMjdiNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.yNGHORH0JNqYrbpNukrgiV5jLuAu1OktkhOdCOI0cPM',
       },
     }
-
-    let url = new URL('https://api.themoviedb.org/3/search/movie?include_adult=false&language=en-US&page=1')
+    let url = new URL(`https://api.themoviedb.org/3/search/movie?include_adult=false&language=en-US&page=${page}`)
     if (searchVal) url.searchParams.set('query', searchVal)
 
     const response = await fetch(url, options)
